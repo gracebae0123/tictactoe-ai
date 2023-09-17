@@ -21,6 +21,7 @@ void display_board(int *board){
         }
         cout<<endl<<"----++----++----"<<endl;
     }
+    cout<<endl;
     
 }
 
@@ -102,8 +103,8 @@ int alphabeta (int* board, int player, int depth, int alpha, int beta, bool maxi
     }
 }
 int getRandomDepth(){
-    int minDepth = 3;
-    int maxDepth = 7;
+    int minDepth = 2;
+    int maxDepth = 8;
     
     random_device rd;
     mt19937 gen(rd());
@@ -112,7 +113,7 @@ int getRandomDepth(){
 }
 
 int findBestMove (int* board, int player){
-    int bestMove = -1;
+    vector<int> bestMove;
     int bestScore = INT_MIN;
     int alpha = INT_MIN;
     int beta = INT_MAX; 
@@ -125,10 +126,11 @@ int findBestMove (int* board, int player){
             //int score = -minimax(board,player*-1);
             board[i] = 0;
             bestScore = max(score, bestScore);
-            bestMove = i;
+            bestMove.push_back(i);
         }
     }
-    return bestMove;
+    srand(time(NULL));
+    return bestMove[rand() % bestMove.size()];
 }
 
 int main(){
@@ -145,20 +147,22 @@ int main(){
 
     int board[9] = {0};
     int moves = 0;
-    int currPlayer = (rand() % 2 == 0) ? PLAYER_X : PLAYER_O;
+    int currPlayer = rand() % 2 == 0 ? PLAYER_X : PLAYER_O;
     int bestMove = 0;
 
     while(moves < 9){
         if (currPlayer == 1){
-            cout<<"Player O turn:"<<endl;
+            cout<<"Player O turn: ";
             bestMove = findBestMove(board, currPlayer);
+            cout<<bestMove<<endl;
             board[bestMove] = currPlayer;
             moves++;
             currPlayer = PLAYER_X;
             display_board(board);
         } else{
-            cout<<"Player X turn:"<<endl;
+            cout<<"Player X turn: ";
             bestMove = findBestMove(board, currPlayer);
+            cout<<bestMove<<endl;
             board[bestMove] = currPlayer;
             moves++;
             currPlayer = PLAYER_O;
